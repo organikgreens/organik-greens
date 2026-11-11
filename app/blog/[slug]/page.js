@@ -12,7 +12,7 @@ const supabase = createClient(
 async function getPost(slug) {
   const { data } = await supabase
     .from('posts')
-    .select('slug, title, excerpt, category, emoji, read_time, body, published, published_at')
+    .select('slug, title, meta_title, excerpt, category, emoji, read_time, body, cover_image, published, published_at')
     .eq('slug', slug)
     .eq('published', true)
     .single();
@@ -24,8 +24,16 @@ export async function generateMetadata({ params }) {
   const post = await getPost(slug);
   if (!post) return { title: 'Article not found — Organik Greens' };
   return {
-    title: `${post.title} — Organik Greens`,
+    title: `${post.meta_title || post.title} — Organik Greens`,
     description: post.excerpt,
+    alternates: { canonical: `https://www.organikgreens.com/blog/${post.slug}` },
+    openGraph: {
+      title: post.meta_title || post.title,
+      description: post.excerpt,
+      type: 'article',
+      url: `https://www.organikgreens.com/blog/${post.slug}`,
+      images: post.cover_image ? [{ url: post.cover_image }] : undefined,
+    },
   };
 }
 

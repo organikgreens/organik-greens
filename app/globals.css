@@ -365,3 +365,24 @@ footer { background:#050f07; color:#fff; padding:64px 24px 0 }
 .appear { opacity: 1 !important; transform: none !important; }
 
 a { cursor: pointer; }
+
+/* ── ARTICLE BODY: long-form elements (lists, tables, images, FAQs) ── */
+.art-body h3 { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--ink); margin:1.6rem 0 .5rem }
+.art-body ul, .art-body ol { margin:0 0 1.1rem 1.4rem; color:#3d4d3f }
+.art-body li { font-size:1rem; line-height:1.75; margin-bottom:.4rem; padding-left:.2rem }
+.art-body ul li::marker { color:var(--g-base) }
+.art-body a { color:var(--g-mid); text-decoration:underline; text-decoration-color:var(--g-light); text-underline-offset:3px }
+.art-body a:hover { text-decoration-color:var(--g-mid) }
+.art-body blockquote { border-left:3px solid var(--g-base); background:var(--g-faint); padding:14px 18px; margin:0 0 1.2rem; border-radius:0 var(--r-sm) var(--r-sm) 0 }
+.art-body blockquote p:last-child { margin-bottom:0 }
+.art-body hr { border:0; border-top:1px solid var(--rule); margin:2rem 0 }
+.art-body table { width:100%; border-collapse:collapse; margin:0 0 1.4rem; font-size:.9rem; display:block; overflow-x:auto }
+.art-body th, .art-body td { border:1px solid var(--rule); padding:9px 12px; text-align:left; vertical-align:top; line-height:1.55 }
+.art-body th { background:var(--g-pale); color:var(--ink); font-weight:600 }
+.art-body figure { margin:1.6rem 0 }
+.art-body figure img { width:100%; height:auto; border-radius:var(--r-sm); background:var(--g-faint) }
+.art-body figcaption { font-size:.8rem; color:var(--ink-4); margin-top:8px; line-height:1.5 }
+.art-body figure.art-cover { margin-top:0 }
+.art-body code { font-size:.88em; background:var(--surface); padding:1px 5px; border-radius:4px }
+.preview-bar { position:sticky; top:64px; z-index:50; background:var(--amber-bg); color:var(--amber); border-bottom:1px solid #f0dcb4; padding:10px 24px; font-size:.85rem; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:64px }
+.preview-bar + #artContent .art-hero { padding-top:40px }
