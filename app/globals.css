@@ -386,3 +386,40 @@ a { cursor: pointer; }
 .art-body code { font-size:.88em; background:var(--surface); padding:1px 5px; border-radius:4px }
 .preview-bar { position:sticky; top:64px; z-index:50; background:var(--amber-bg); color:var(--amber); border-bottom:1px solid #f0dcb4; padding:10px 24px; font-size:.85rem; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:64px }
 .preview-bar + #artContent .art-hero { padding-top:40px }
+
+/* ── ARTICLE IMAGES: smaller, beside the text they illustrate (cover stays full width) ──
+   The Content Desk wraps each image and its paragraph in .art-media; sides alternate down the page. */
+.art-body { display:flow-root }
+.art-body h2, .art-body table, .art-body hr, .art-body .art-cta { clear:both }
+.art-media { display:flex; align-items:center; gap:26px; margin:1.5rem 0 1.7rem; clear:both }
+.art-media.flip { flex-direction:row-reverse }
+.art-body .art-media > figure { flex:0 0 42%; margin:0; width:auto; float:none }
+.art-media > figure img { aspect-ratio:3/2; object-fit:cover; border-radius:var(--r-sm) }
+.art-media > figure figcaption { font-size:.74rem; margin-top:6px }
+.am-text { flex:1; min-width:0 }
+.am-text > :last-child { margin-bottom:0 }
+/* images without a wrapper (older articles) still sit to one side */
+.art-body > figure:not(.art-cover) { width:42%; float:right; margin:.35rem 0 1rem 1.6rem }
+.art-body > figure:not(.art-cover) img { aspect-ratio:3/2; object-fit:cover }
+@media (max-width: 640px) {
+  .art-media, .art-media.flip { flex-direction:column; align-items:stretch; gap:12px }
+  .art-body > figure:not(.art-cover) { float:none; width:100%; margin:1.2rem 0 }
+}
+
+/* ── END OF ARTICLE: write to us ── */
+.reader-cta { text-align:left }
+.reader-cta p a { color:var(--g-mid); font-weight:600; text-decoration:underline; text-underline-offset:3px }
+.reader-open { background:var(--ink); color:#fff; padding:12px 22px; border:none; border-radius:50px; font-size:.88rem; font-weight:600; cursor:pointer }
+.reader-open:hover { background:var(--g-dark) }
+.reader-form { display:grid; grid-template-columns:1fr 1fr; gap:12px 14px; margin-top:6px }
+.reader-form label { display:flex; flex-direction:column; gap:5px; font-size:.8rem; font-weight:600; color:var(--ink-2) }
+.reader-form .rf-full { grid-column:1 / -1 }
+.reader-form input, .reader-form select, .reader-form textarea { font:inherit; font-size:.92rem; font-weight:400; padding:10px 14px; border:1.5px solid var(--rule); border-radius:10px; background:#fff; color:var(--ink); outline:none; min-width:0 }
+.reader-form input:focus, .reader-form select:focus, .reader-form textarea:focus { border-color:var(--g-base) }
+.reader-form textarea { resize:vertical; min-height:110px }
+.rf-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap }
+.rf-actions button { background:var(--ink); color:#fff; padding:11px 22px; border:none; border-radius:50px; font-size:.86rem; font-weight:600; cursor:pointer }
+.rf-actions button:disabled { opacity:.6 }
+.rf-note { font-size:.82rem; color:#b42318 }
+.reader-done { background:var(--g-pale); border-radius:10px; padding:12px 16px; color:var(--ink) !important; font-weight:500 }
+@media (max-width: 560px) { .reader-form { grid-template-columns:1fr } }

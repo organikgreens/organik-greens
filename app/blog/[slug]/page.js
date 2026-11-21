@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import Newsletter from '@/components/Newsletter';
+import ReaderMessage from '@/components/ReaderMessage';
 
 // Server-side Supabase client (safe to use anon key here too; RLS still applies)
 const supabase = createClient(
@@ -77,18 +77,7 @@ export default async function ArticlePage({ params }) {
             <p>{post.excerpt}</p>
           </div>
           <div className="art-body" dangerouslySetInnerHTML={{ __html: post.body }} />
-          <div className="art-cta">
-            <h3>Enjoyed this article?</h3>
-            <p>Get practical growing tips every Monday — free in your inbox.</p>
-            <Newsletter
-              heading=""
-              eyebrow=""
-              description=""
-              buttonLabel="Subscribe"
-              note=""
-              source={`article:${post.slug}`}
-            />
-          </div>
+          <ReaderMessage slug={post.slug} title={post.title} />
         </div>
       </div>
     </div>

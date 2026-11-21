@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import Newsletter from '@/components/Newsletter';
+import ReaderMessage from '@/components/ReaderMessage';
 
 // Private draft preview. Shows a post (published or not) only when ?key= matches the
 // post's secret preview_token. Never indexed by search engines.
@@ -92,11 +92,7 @@ export default async function PreviewPage({ params, searchParams }) {
             </div>
           ) : null}
           <div className="art-body" dangerouslySetInnerHTML={{ __html: post.body }} />
-          <div className="art-cta">
-            <h3>Enjoyed this article?</h3>
-            <p>Get practical growing tips every Monday — free in your inbox.</p>
-            <Newsletter heading="" eyebrow="" description="" buttonLabel="Subscribe" note="" source={`preview:${post.slug}`} />
-          </div>
+          <ReaderMessage slug={post.slug} title={post.title} />
         </div>
       </div>
     </div>

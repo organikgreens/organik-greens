@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 const FAQS = [
   ['How quickly do you reply to messages?', 'We aim to reply to all emails within 24–48 hours on working days. For urgent matters, WhatsApp is the fastest way to reach us — we typically respond within a few hours.'],
@@ -22,9 +23,26 @@ function Faq({ q, a, isOpen, onToggle }) {
 export default function ContactPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const topic = String(f.get('topic') || 'General Enquiry');
+    const kind = topic === 'General Enquiry' ? 'question' : topic === 'Other' ? 'other' : 'collaboration';
+    const phone = String(f.get('phone') || '').trim();
+    const body = `[${topic}] ${String(f.get('message') || '').trim()}${phone ? `\n\nPhone: ${phone}` : ''}`;
+    setSending(true); setError('');
+    const { error: err } = await supabase.from('reader_messages').insert({
+      kind,
+      name: `${String(f.get('first') || '').trim()} ${String(f.get('last') || '').trim()}`.trim().slice(0, 120) || null,
+      email: String(f.get('email') || '').trim() || null,
+      message: body.slice(0, 4000),
+      page: '/contact',
+    });
+    setSending(false);
+    if (err) { setError('Your message could not be sent. Please try again, or email deals.rajat@gmail.com.'); return; }
     setSubmitted(true);
   }
 
@@ -88,14 +106,14 @@ export default function ContactPage() {
               {!submitted && (
                 <form onSubmit={handleSubmit}>
                   <div className="form-row">
-                    <div className="form-group"><label>First Name *</label><input type="text" required placeholder="Rahul" /></div>
-                    <div className="form-group"><label>Last Name *</label><input type="text" required placeholder="Sharma" /></div>
+                    <div className="form-group"><label>First Name *</label><input name="first" type="text" required placeholder="Rahul" /></div>
+                    <div className="form-group"><label>Last Name *</label><input name="last" type="text" required placeholder="Sharma" /></div>
                   </div>
-                  <div className="form-group"><label>Email Address *</label><input type="email" required placeholder="rahul@example.com" /></div>
-                  <div className="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210" /></div>
+                  <div className="form-group"><label>Email Address *</label><input name="email" type="email" required placeholder="rahul@example.com" /></div>
+                  <div className="form-group"><label>Phone Number</label><input name="phone" type="tel" placeholder="+91 98765 43210" /></div>
                   <div className="form-group">
                     <label>How can we help? *</label>
-                    <select required defaultValue="">
+                    <select name="topic" required defaultValue="">
                       <option value="" disabled>Select a topic</option>
                       <option>General Enquiry</option>
                       <option>Advertising / Sponsorship</option>
@@ -107,8 +125,9 @@ export default function ContactPage() {
                       <option>Other</option>
                     </select>
                   </div>
-                  <div className="form-group"><label>Message *</label><textarea required placeholder="Tell us about your project, question, or idea — the more detail the better..."></textarea></div>
-                  <button type="submit" className="form-submit">Send Message →</button>
+                  <div className="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us about your project, question, or idea — the more detail the better..."></textarea></div>
+                  <button type="submit" className="form-submit" disabled={sending}>{sending ? 'Sending…' : 'Send Message →'}</button>
+                  {error ? <div className="form-note" role="alert" style={{ color: '#b42318' }}>{error}</div> : null}
                   <div className="form-note">📧 Your message goes directly to deals.rajat@gmail.com</div>
                 </form>
               )}
