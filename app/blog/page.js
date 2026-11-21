@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import Thumb from '@/components/Thumb';
 
 const CATEGORIES = [
   ['all', 'All Topics'],
@@ -31,7 +32,7 @@ function BlogContent() {
       setLoading(true);
       const { data, error } = await supabase
         .from('posts')
-        .select('slug, title, excerpt, category, emoji, read_time')
+        .select('slug, title, excerpt, category, emoji, read_time, thumbnail, cover_image')
         .eq('published', true)
         .order('published_at', { ascending: false });
       if (!cancelled) {
@@ -76,7 +77,7 @@ function BlogContent() {
           <div className="blog-grid">
             {filtered.map((p) => (
               <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-card">
-                <div className="blog-thumb">{p.emoji || '🌱'}</div>
+                <Thumb post={p} />
                 <div className="blog-body">
                   <span className="post-cat">{CATEGORY_LABELS[p.category] || p.category}</span>
                   <h3>{p.title}</h3>

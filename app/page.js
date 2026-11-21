@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ReaderMessage from '@/components/ReaderMessage';
+import LatestArticles from '@/components/LatestArticles';
 
 export default function HomePage() {
   return (
@@ -95,42 +96,7 @@ export default function HomePage() {
             </div>
             <Link href="/blog" className="btn btn-outline appear">View all articles →</Link>
           </div>
-          <div className="posts-hero" style={{ marginTop: 32 }}>
-            <Link href="/blog/organic-guide" className="post large appear d1">
-              <div className="post-thumb tall" style={{ fontSize: '4rem' }}>🌾</div>
-              <div className="post-body">
-                <span className="post-cat">Organic Farming</span>
-                <h3>The Complete Guide to Organic Farming in India (2025) — Soil, Seeds, Certification & Profit</h3>
-                <p>A beginner-friendly deep-dive into every aspect of chemical-free farming — from choosing your first crop to getting PGS-India certified and earning a premium from your harvest.</p>
-                <div className="post-meta"><span>Organik Greens</span><span className="post-read">12 min read</span></div>
-              </div>
-            </Link>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <Link href="/blog/terrace-guide" className="post appear d2">
-                <div className="post-thumb">🏙️</div>
-                <div className="post-body">
-                  <span className="post-cat">Urban Farming</span>
-                  <h3>Top 10 Vegetables to Grow on Your Terrace in Delhi & Mumbai</h3>
-                  <p>These crops thrive in Indian urban climates and need minimal space.</p>
-                  <div className="post-meta"><span>Urban Farming</span><span className="post-read">8 min</span></div>
-                </div>
-              </Link>
-              <Link href="/blog/hydro-guide" className="post appear d3">
-                <div className="post-thumb">💧</div>
-                <div className="post-body">
-                  <span className="post-cat">Hydroponics</span>
-                  <h3>Hydroponics at Home: What It Costs & How to Start in India</h3>
-                  <p>Real cost breakdowns for an NFT system under ₹5,000.</p>
-                  <div className="post-meta"><span>Hydroponics</span><span className="post-read">10 min</span></div>
-                </div>
-              </Link>
-            </div>
-          </div>
-          <div className="posts-row" style={{ marginTop: 20 }}>
-            <Link href="/blog/composting" className="post appear d1"><div className="post-thumb">🌿</div><div className="post-body"><span className="post-cat">Soil & Seeds</span><h3>5 Composting Methods That Work in Indian Climate</h3><p>Turn kitchen waste into black gold — with cost and time comparisons.</p><div className="post-meta"><span>Soil & Seeds</span><span className="post-read">9 min</span></div></div></Link>
-            <Link href="/blog/pest-control" className="post appear d2"><div className="post-thumb">🍃</div><div className="post-body"><span className="post-cat">Organic Farming</span><h3>12 Natural Pest Control Methods That Work on Indian Crops</h3><p>From neem spray to companion planting — zero chemicals.</p><div className="post-meta"><span>Organic Farming</span><span className="post-read">11 min</span></div></div></Link>
-            <Link href="/blog/govt-schemes" className="post appear d3"><div className="post-thumb">📋</div><div className="post-body"><span className="post-cat">Agri Business</span><h3>Government Schemes for Organic Farmers in India 2025</h3><p>PM-KISAN, PKVY, eNAM — every scheme you should be using.</p><div className="post-meta"><span>Agri Business</span><span className="post-read">13 min</span></div></div></Link>
-          </div>
+          <LatestArticles />
         </div>
       </section>
 

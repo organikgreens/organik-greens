@@ -12,7 +12,7 @@ const supabase = createClient(
 async function getPost(slug) {
   const { data } = await supabase
     .from('posts')
-    .select('slug, title, meta_title, excerpt, category, emoji, read_time, body, cover_image, published, published_at, updated_at')
+    .select('slug, title, meta_title, excerpt, category, emoji, read_time, body, cover_image, thumbnail, published, published_at, updated_at')
     .eq('slug', slug)
     .eq('published', true)
     .single();
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
       description: post.excerpt,
       type: 'article',
       url: `https://www.organikgreens.com/blog/${post.slug}`,
-      images: post.cover_image ? [{ url: post.cover_image }] : undefined,
+      images: post.cover_image || post.thumbnail ? [{ url: post.cover_image || post.thumbnail }] : undefined,
     },
   };
 }
@@ -79,7 +79,7 @@ export default async function ArticlePage({ params }) {
       '@type': 'Article',
       headline: post.meta_title || post.title,
       description: post.excerpt || undefined,
-      image: post.cover_image ? [post.cover_image] : undefined,
+      image: [post.cover_image, post.thumbnail].filter(Boolean).length ? [post.cover_image, post.thumbnail].filter(Boolean) : undefined,
       datePublished: post.published_at || undefined,
       dateModified: post.updated_at || post.published_at || undefined,
       mainEntityOfPage: url,

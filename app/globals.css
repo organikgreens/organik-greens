@@ -429,3 +429,10 @@ a { cursor: pointer; }
 .reader-card .reader-form { margin-top:12px }
 .reader-card p { font-size:.9rem; color:var(--ink-3) }
 .rf-privacy { font-size:.74rem !important; color:var(--ink-4) !important; margin:0 !important }
+
+/* ── ARTICLE THUMBNAILS on cards ── */
+.blog-thumb.has-img, .post-thumb.has-img { padding:0; font-size:0; background:var(--g-faint) }
+.blog-thumb.has-img img, .post-thumb.has-img img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease }
+.blog-card:hover .blog-thumb.has-img img, .post:hover .post-thumb.has-img img { transform:scale(1.03) }
+.blog-thumb.has-img { height:auto; aspect-ratio:16/9 }
+.posts-loading { color:var(--ink-3); font-size:.9rem }
