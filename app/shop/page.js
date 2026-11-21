@@ -1,4 +1,4 @@
-import Newsletter from '@/components/Newsletter';
+import ReaderMessage from '@/components/ReaderMessage';
 
 export const metadata = {
   title: 'Shop — Organik Greens',
@@ -29,14 +29,15 @@ export default function ShopPage() {
           </div>
         </div>
       </section>
-      <Newsletter
-        id="nl-anchor"
-        eyebrow="Product Waitlist"
-        heading="Be first to know"
-        description="Join our newsletter to get early access to new products, pre-launch discounts, and exclusive member pricing on all courses and physical kits."
-        buttonLabel="Join Waitlist"
-        note="No spam. Unsubscribe anytime."
-        source="shop"
+      <ReaderMessage
+        variant="section"
+        id="ask"
+        eyebrow="Interested in a product?"
+        heading="Tell us what you would like"
+        page="/shop"
+        kinds={[['product', 'A product I am interested in'], ['question', 'A question'], ['suggestion', 'A suggestion'], ['other', 'Something else']]}
+        placeholder="For example: I would like the hydroponic starter kit for my balcony in Bengaluru. When will it be available?"
+        intro={<>Products are coming soon. Tell us which one you want, or ask us anything, and we will reply by email or WhatsApp.</>}
       />
     </div>
   );

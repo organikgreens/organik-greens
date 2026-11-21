@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Newsletter from '@/components/Newsletter';
+import ReaderMessage from '@/components/ReaderMessage';
 
 export default function HomePage() {
   return (
@@ -13,7 +13,7 @@ export default function HomePage() {
           <p className="hero-lead">Expert guides on organic farming, urban gardening, hydroponics, and sustainable living — written for India, by people who care about the soil beneath your feet.</p>
           <div className="hero-actions">
             <Link href="/blog" className="btn btn-dark">Explore Articles →</Link>
-            <a href="#nl-anchor" className="btn btn-outline">Free Newsletter</a>
+            <a href="#ask" className="btn btn-outline">Ask a Question</a>
           </div>
           <div className="hero-stats">
             <div><span className="hero-stat-n">24+</span><span className="hero-stat-l">Articles</span></div>
@@ -218,17 +218,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Newsletter id="nl-anchor" source="homepage" />
+      <ReaderMessage variant="section" id="ask" eyebrow="Ask Organik Greens" heading="Stuck with a plant problem? Ask us." page="/#ask"
+        intro={<>Send your question, a suggestion or a topic you want us to cover. We reply by email or WhatsApp within 48 hours.</>} />
 
       {/* CTA BANNER */}
       <div className="cta-banner appear">
         <div className="cta-banner-inner">
-          <div className="eyebrow" style={{ color: 'rgba(255,255,255,.4)' }}>WhatsApp Community</div>
-          <h2>Join 500+ growers on WhatsApp</h2>
-          <p>Get weekly tips, ask farming questions, and connect with organic growers from Delhi to Bangalore — all in one friendly group.</p>
+          <div className="eyebrow" style={{ color: 'rgba(255,255,255,.4)' }}>Questions welcome</div>
+          <h2>Have a question about your garden?</h2>
+          <p>Tell us what you are growing and what you are seeing. We read every message and reply by email or WhatsApp within 48 hours.</p>
           <div className="cta-banner-btns">
-            <a href="https://wa.me/919311053111" target="_blank" rel="noreferrer" className="btn-white">Join on WhatsApp →</a>
-            <Link href="/contact" className="btn-ghost">Get in Touch</Link>
+            <a href="#ask" className="btn-white">Ask a question →</a>
+            <Link href="/contact" className="btn-ghost">Contact us</Link>
           </div>
         </div>
       </div>

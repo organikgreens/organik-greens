@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Newsletter from '@/components/Newsletter';
+import ReaderMessage from '@/components/ReaderMessage';
 
 export const metadata = {
   title: 'About — Organik Greens',
@@ -51,7 +51,7 @@ export default function AboutPage() {
             <div className="timeline">
               <div className="tl-item"><div className="tl-year">2025 — Month 1</div><h4>Launch</h4><p>Organik Greens goes live with our first articles on organic farming and urban gardening in India.</p></div>
               <div className="tl-item"><div className="tl-year">2025 — Month 3</div><h4>First Digital Products</h4><p>The Hydroponic Setup Guide and Crop Calendar launch — our first step toward a full product ecosystem.</p></div>
-              <div className="tl-item"><div className="tl-year">2025 — Month 6</div><h4>Community & Courses</h4><p>500+ WhatsApp subscribers, first online course launch, and growing towards 50,000 monthly readers.</p></div>
+              <div className="tl-item"><div className="tl-year">2025 — Month 6</div><h4>Community & Courses</h4><p>First online course launch, an active community of readers writing in with questions, and growing towards 50,000 monthly readers.</p></div>
               <div className="tl-item"><div className="tl-year">2026 — Year 2</div><h4>Full Ecosystem</h4><p>Physical product lines, consulting services, partnerships with organic farms and agritech companies across India.</p></div>
             </div>
 
@@ -79,13 +79,13 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <Newsletter
-        eyebrow="Stay Connected"
-        heading="Follow the journey"
-        description="Get weekly updates from the field — practical tips, new articles, and behind-the-scenes stories from the Organik Greens team."
-        buttonLabel="Subscribe Free"
-        note="No spam. Just growing."
-        source="about"
+      <ReaderMessage
+        variant="section"
+        id="ask"
+        eyebrow="Stay in touch"
+        heading="Write to us"
+        page="/about"
+        intro={<>Questions, suggestions, a topic you want covered or a correction: we read every message and reply by email or WhatsApp within 48 hours.</>}
       />
     </div>
   );

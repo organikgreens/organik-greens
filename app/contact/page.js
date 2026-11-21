@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import ReaderMessage from '@/components/ReaderMessage';
 
 const FAQS = [
   ['How quickly do you reply to messages?', 'We aim to reply to all emails within 24–48 hours on working days. For urgent matters, WhatsApp is the fastest way to reach us — we typically respond within a few hours.'],
   ['Do you accept guest articles or expert contributions?', 'Yes! We welcome contributions from agronomists, organic farmers, nutritionists, and agritech professionals. Please use the contact form with "Content Collaboration" selected, and share a brief outline of your proposed article.'],
   ['Can you help me set up an organic farm or urban garden?', 'We offer consulting sessions for farms, urban gardens, schools, and corporate green spaces. Select "Consulting Request" in the contact form and share your location and project scope — we\'ll get back to you with details and pricing.'],
-  ['How can brands advertise or collaborate with Organik Greens?', 'We work with organic brands, agritech companies, and sustainable food businesses on sponsored articles, newsletter features, social media collaborations, and product reviews. We maintain a strict editorial policy — all sponsorships are clearly disclosed. Use the form to get a media kit.'],
+  ['How can brands advertise or collaborate with Organik Greens?', 'We work with organic brands, agritech companies, and sustainable food businesses on sponsored articles, social media collaborations, and product reviews. We maintain a strict editorial policy — all sponsorships are clearly disclosed. Use the form to get a media kit.'],
   ['Are the digital products available for immediate download?', 'Yes — all digital products (PDF guides, crop calendars) are available for instant download after purchase. Our secure payment and delivery system is powered by Razorpay. If you have any issues with a download, email us and we\'ll resolve it immediately.'],
 ];
 
@@ -22,30 +22,6 @@ function Faq({ q, a, isOpen, onToggle }) {
 
 export default function ContactPage() {
   const [openFaq, setOpenFaq] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const f = new FormData(e.currentTarget);
-    const topic = String(f.get('topic') || 'General Enquiry');
-    const kind = topic === 'General Enquiry' ? 'question' : topic === 'Other' ? 'other' : 'collaboration';
-    const phone = String(f.get('phone') || '').trim();
-    const body = `[${topic}] ${String(f.get('message') || '').trim()}${phone ? `\n\nPhone: ${phone}` : ''}`;
-    setSending(true); setError('');
-    const { error: err } = await supabase.from('reader_messages').insert({
-      kind,
-      name: `${String(f.get('first') || '').trim()} ${String(f.get('last') || '').trim()}`.trim().slice(0, 120) || null,
-      email: String(f.get('email') || '').trim() || null,
-      message: body.slice(0, 4000),
-      page: '/contact',
-    });
-    setSending(false);
-    if (err) { setError('Your message could not be sent. Please try again, or email deals.rajat@gmail.com.'); return; }
-    setSubmitted(true);
-  }
-
   return (
     <div id="pg-contact" className="pg on">
       <div className="contact-section">
@@ -99,38 +75,15 @@ export default function ContactPage() {
           <div className="appear d2">
             <div className="contact-form-card">
               <h2>Send us a message</h2>
-              <p>Fill in the form and we'll get back to you within 24 hours.</p>
-              {submitted && (
-                <div className="form-success show"><p>✅ Message sent! We'll reply to your email within 24 hours. Thank you for reaching out.</p></div>
-              )}
-              {!submitted && (
-                <form onSubmit={handleSubmit}>
-                  <div className="form-row">
-                    <div className="form-group"><label>First Name *</label><input name="first" type="text" required placeholder="Rahul" /></div>
-                    <div className="form-group"><label>Last Name *</label><input name="last" type="text" required placeholder="Sharma" /></div>
-                  </div>
-                  <div className="form-group"><label>Email Address *</label><input name="email" type="email" required placeholder="rahul@example.com" /></div>
-                  <div className="form-group"><label>Phone Number</label><input name="phone" type="tel" placeholder="+91 98765 43210" /></div>
-                  <div className="form-group">
-                    <label>How can we help? *</label>
-                    <select name="topic" required defaultValue="">
-                      <option value="" disabled>Select a topic</option>
-                      <option>General Enquiry</option>
-                      <option>Advertising / Sponsorship</option>
-                      <option>Content Collaboration</option>
-                      <option>Consulting Request</option>
-                      <option>Product / Course Enquiry</option>
-                      <option>Press / Media</option>
-                      <option>Internship Opportunity</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div className="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us about your project, question, or idea — the more detail the better..."></textarea></div>
-                  <button type="submit" className="form-submit" disabled={sending}>{sending ? 'Sending…' : 'Send Message →'}</button>
-                  {error ? <div className="form-note" role="alert" style={{ color: '#b42318' }}>{error}</div> : null}
-                  <div className="form-note">📧 Your message goes directly to deals.rajat@gmail.com</div>
-                </form>
-              )}
+              <ReaderMessage
+                variant="card"
+                heading=""
+                page="/contact"
+                startOpen
+                intro={<>Fill in the form and we will get back to you within 24–48 hours, on email or WhatsApp, whichever you choose.</>}
+                kinds={[['question', 'General enquiry or question'], ['suggestion', 'Suggestion or feedback'], ['topic', 'A topic you should cover'], ['collaboration', 'Content collaboration'], ['consulting', 'Consulting request'], ['advertising', 'Advertising or sponsorship'], ['product', 'Product or course enquiry'], ['press', 'Press or media'], ['internship', 'Internship'], ['other', 'Other']]}
+                placeholder="Tell us about your question, project or idea. The more detail, the better."
+              />
             </div>
           </div>
         </div>
