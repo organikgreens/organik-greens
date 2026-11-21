@@ -20,6 +20,12 @@ async function getDraft(slug, key) {
   return Array.isArray(data) ? data[0] || null : data || null;
 }
 
+async function getState(slug, key) {
+  const { data } = await supabase.rpc('post_preview_state', { p_slug: slug, p_token: key });
+  const row = Array.isArray(data) ? data[0] : data;
+  return row || { is_live: false, has_changes: false };
+}
+
 export async function generateMetadata({ params, searchParams }) {
   const { slug } = await params;
   const { key } = await searchParams;
@@ -45,14 +51,23 @@ export default async function PreviewPage({ params, searchParams }) {
   const { key } = await searchParams;
   const post = await getDraft(slug, key);
   if (!post) notFound();
+  const state = await getState(slug, key);
 
   const year = post.published_at ? new Date(post.published_at).getFullYear() : new Date().getFullYear();
 
   return (
     <div id="pg-article" className="pg on">
       <div className="preview-bar">
-        <strong>{post.published ? 'Preview of a live article' : 'Draft preview'}</strong>
-        <span>Only people with this link can see this page. It is not listed on the blog or in Google.</span>
+        <strong>
+          {state.is_live
+            ? state.has_changes ? 'Preview of your unpublished changes' : 'Preview of the live article'
+            : 'Draft preview'}
+        </strong>
+        <span>
+          {state.is_live && state.has_changes
+            ? 'Readers still see the current version until you press Publish in the Content Desk.'
+            : 'Only people with this link can see this page. It is not listed on the blog or in Google.'}
+        </span>
       </div>
       <div id="artContent">
         <div className="art-hero">
