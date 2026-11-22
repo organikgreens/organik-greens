@@ -27,6 +27,7 @@ export async function rpc(name, args = {}) {
 export async function login(pass) {
   const { data, error } = await supabase.rpc('admin_login', { p_pass: pass });
   if (error) throw new Error(error.message);
+  if (!data) throw new Error('Wrong passcode.');
   setToken(data);
   return data;
 }
