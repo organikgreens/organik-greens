@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import ReaderMessage from '@/components/ReaderMessage';
+import PromoSlot from '@/components/PromoSlot';
+import { getSettings, categoryLabels } from '@/lib/site';
 
 // Server-side Supabase client (safe to use anon key here too; RLS still applies)
 const supabase = createClient(
@@ -37,14 +39,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const CATEGORY_LABELS = {
-  'organic-farming': 'Organic Farming',
-  'urban-farming': 'Urban Farming',
-  'hydroponics': 'Hydroponics',
-  'soil-seeds': 'Soil & Seeds',
-  'health-food': 'Health & Food',
-  'agri-business': 'Agri Business',
-};
 
 // Questions and answers from the article's FAQ section (h3 question, following paragraphs as the answer).
 function faqFrom(html) {
@@ -67,9 +61,11 @@ function faqFrom(html) {
 
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const [post, s] = await Promise.all([getPost(slug), getSettings()]);
 
-  if (!post) notFound();
+  if (!post || s.pages.blog?.enabled === false) notFound();
+  const a = s.article;
+  const CATEGORY_LABELS = categoryLabels(s);
 
   const url = `https://www.organikgreens.com/blog/${post.slug}`;
   const faq = faqFrom(post.body);
@@ -97,25 +93,27 @@ export default async function ArticlePage({ params }) {
       <div id="artContent">
         <div className="art-hero">
           <div className="art-hero-inner">
-            <Link href="/blog" className="art-back">← Back to Blog</Link>
+            {a.back_label ? <Link href="/blog" className="art-back">{a.back_label}</Link> : null}
             <span className="post-cat">{CATEGORY_LABELS[post.category] || post.category}</span>
             <h1>{post.title}</h1>
             <div className="art-meta">
-              <span>Organik Greens</span>
-              <span className="art-meta-dot"></span>
+              {a.author_label ? <><span>{a.author_label}</span><span className="art-meta-dot"></span></> : null}
               <span>{post.read_time} read</span>
-              <span className="art-meta-dot"></span>
-              <span>{year}</span>
+              {a.show_year ? <><span className="art-meta-dot"></span><span>{year}</span></> : null}
             </div>
           </div>
         </div>
         <div className="art-body-wrap">
-          <div className="art-summary">
-            <strong>Summary</strong>
-            <p>{post.excerpt}</p>
-          </div>
+          {a.show_summary && post.excerpt ? (
+            <div className="art-summary">
+              <strong>{a.summary_label}</strong>
+              <p>{post.excerpt}</p>
+            </div>
+          ) : null}
+          <PromoSlot slot="article_top" />
           <div className="art-body" dangerouslySetInnerHTML={{ __html: post.body }} />
-          <ReaderMessage slug={post.slug} title={post.title} />
+          <PromoSlot slot="article_bottom" />
+          {a.show_ask_box ? <ReaderMessage slug={post.slug} title={post.title} /> : null}
         </div>
       </div>
     </div>

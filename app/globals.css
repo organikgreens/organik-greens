@@ -105,7 +105,7 @@ h1,h2,h3,h4 { font-family:'DM Serif Display',serif; line-height:1.18; letter-spa
 @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
 /* ── PILLARS ── */
-.pillars-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:var(--r); overflow:hidden }
+.pillars-grid { display:grid; grid-template-columns:repeat(var(--cols,3),1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:var(--r); overflow:hidden }
 .pillar { background:var(--white); padding:28px 24px; cursor:pointer; transition:var(--trans) }
 .pillar:hover { background:var(--g-faint) }
 .pillar-icon { font-size:1.6rem; margin-bottom:14px }
@@ -132,7 +132,7 @@ h1,h2,h3,h4 { font-family:'DM Serif Display',serif; line-height:1.18; letter-spa
 .post-read { background:var(--surface); padding:2px 8px; border-radius:50px }
 
 /* ── PHILOSOPHY / VALUES ── */
-.values-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px }
+.values-grid { display:grid; grid-template-columns:repeat(var(--cols,2),1fr); gap:24px }
 .value-card { background:var(--g-faint); border-radius:var(--r); padding:28px; border:1px solid var(--g-light) }
 .value-card h4 { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); margin:10px 0 6px }
 .value-card p { font-size:.875rem; color:var(--ink-3); line-height:1.7 }
@@ -141,7 +141,7 @@ h1,h2,h3,h4 { font-family:'DM Serif Display',serif; line-height:1.18; letter-spa
 /* ── TESTIMONIALS / SOCIAL PROOF ── */
 .proof-strip { background:var(--g-dark); padding:64px 24px; text-align:center }
 .proof-strip-inner { max-width:1160px; margin:0 auto }
-.proof-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:48px }
+.proof-grid { display:grid; grid-template-columns:repeat(var(--cols,3),1fr); gap:24px; margin-top:48px }
 .proof-card { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:var(--r); padding:24px; text-align:left }
 .proof-text { font-size:.9rem; color:rgba(255,255,255,.8); line-height:1.7; margin-bottom:16px }
 .proof-author { display:flex; align-items:center; gap:10px }
@@ -303,7 +303,7 @@ h1,h2,h3,h4 { font-family:'DM Serif Display',serif; line-height:1.18; letter-spa
 /* ── FOOTER ── */
 footer { background:#050f07; color:#fff; padding:64px 24px 0 }
 .footer-inner { max-width:1160px; margin:0 auto }
-.footer-top { display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr; gap:48px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,.07) }
+.footer-top { display:grid; grid-template-columns:var(--fcols,2.2fr 1fr 1fr 1fr); gap:48px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,.07) }
 .footer-brand { }
 .footer-brand img { height:36px; margin-bottom:16px }
 .footer-brand p { font-size:.85rem; color:rgba(255,255,255,.42); line-height:1.7; max-width:240px }
@@ -436,3 +436,51 @@ a { cursor: pointer; }
 .blog-card:hover .blog-thumb.has-img img, .post:hover .post-thumb.has-img img { transform:scale(1.03) }
 .blog-thumb.has-img { height:auto; aspect-ratio:16/9 }
 .posts-loading { color:var(--ink-3); font-size:.9rem }
+
+/* ── DASHBOARD-DRIVEN EXTRAS ── */
+body { padding-top: var(--promo-bar, 0px) }
+.pillars-grid.cards { gap:20px; background:none; border:none; border-radius:0; overflow:visible }
+.pillars-grid.cards .pillar { border:1px solid var(--rule); border-radius:var(--r) }
+.pillar-img { width:100%; object-fit:cover; border-radius:var(--r-sm); margin-bottom:14px; background:var(--g-faint) }
+.product-img img, .proof-avatar img { width:100%; height:100%; object-fit:cover }
+.proof-avatar { overflow:hidden }
+.value-icon { font-size:1.5rem; margin-bottom:8px }
+.custom-block { padding:64px 24px }
+.custom-block .cb-inner { max-width:1160px; margin:0 auto }
+.custom-block .cb-narrow { max-width:760px; margin:0 auto }
+.custom-block .cb-body { color:var(--ink-3); line-height:1.8; margin-top:12px }
+.custom-block .cb-body p { margin-bottom:1rem }
+.cb-cards { display:grid; grid-template-columns:repeat(var(--cols,3),1fr); gap:20px; margin-top:32px }
+.cb-card { background:var(--white); border:1px solid var(--rule); border-radius:var(--r); padding:24px; display:block }
+.cb-card img { width:100%; height:160px; object-fit:cover; border-radius:var(--r-sm); margin-bottom:14px }
+.cb-card h4 { font-size:1.1rem; margin-bottom:6px }
+.cb-card p { font-size:.88rem; color:var(--ink-3); line-height:1.65 }
+.cb-buttons { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px }
+@media(max-width:768px){ .cb-cards { grid-template-columns:1fr } }
+
+/* promotions */
+.promo-topbar { position:fixed; top:64px; left:0; right:0; z-index:880; display:flex; align-items:center; justify-content:center; gap:12px; padding:9px 44px; font-size:.85rem; font-weight:500; text-align:center; background:var(--g-dark); color:#fff }
+.promo-topbar a.promo-cta { font-weight:700; text-decoration:underline; text-underline-offset:3px }
+.promo-x { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:inherit; opacity:.7; font-size:1.1rem; line-height:1; padding:4px 8px }
+.promo-tag { display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:2px 7px; border-radius:50px; background:rgba(0,0,0,.08); opacity:.85 }
+.promo-wrap { max-width:1160px; margin:0 auto; padding:24px }
+.promo-banner { position:relative; display:flex; align-items:center; gap:24px; border-radius:var(--r); overflow:hidden; background:var(--g-pale); color:var(--ink); border:1px solid var(--rule) }
+.promo-banner.img-only { display:block; border:none; background:none }
+.promo-banner.img-only img { width:100%; height:auto; border-radius:var(--r) }
+.promo-banner .pb-img { flex:0 0 38%; align-self:stretch; min-height:160px }
+.promo-banner .pb-img img { width:100%; height:100%; object-fit:cover }
+.promo-banner .pb-text { padding:24px 28px; flex:1 }
+.promo-banner h4 { font-size:1.35rem; margin:8px 0 6px; color:inherit }
+.promo-banner p { font-size:.9rem; opacity:.85; line-height:1.6 }
+.promo-banner .promo-tag, .promo-card .promo-tag { position:absolute; top:10px; right:10px }
+.promo-btn { display:inline-block; margin-top:14px; padding:10px 20px; border-radius:50px; font-size:.85rem; font-weight:600; background:var(--ink); color:#fff }
+.promo-card { position:relative; max-width:420px; margin:0 auto; border-radius:var(--r); overflow:hidden; border:1px solid var(--rule); background:var(--white) }
+.promo-card img { width:100%; height:200px; object-fit:cover }
+.promo-card .pc-text { padding:20px }
+.promo-inline { position:relative; border-left:3px solid var(--g-base); background:var(--g-faint); padding:14px 18px; border-radius:0 var(--r-sm) var(--r-sm) 0; font-size:.9rem }
+.promo-overlay { position:fixed; inset:0; z-index:9990; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; padding:20px }
+.promo-popup { position:relative; max-width:480px; width:100%; border-radius:var(--r); overflow:hidden; background:var(--white); box-shadow:var(--shadow-md) }
+.promo-popup img { width:100%; max-height:300px; object-fit:cover }
+.promo-popup .pp-text { padding:24px }
+.promo-popup .promo-x { top:18px; transform:none; background:rgba(255,255,255,.85); border-radius:50%; color:var(--ink); width:32px; height:32px; padding:0 }
+@media(max-width:640px){ .promo-banner { flex-direction:column; align-items:stretch } .promo-banner .pb-img { flex:none; height:160px } .promo-topbar { font-size:.78rem } }

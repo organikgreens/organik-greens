@@ -6,19 +6,13 @@ import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Thumb from '@/components/Thumb';
 
-const CATEGORIES = [
-  ['all', 'All Topics'],
-  ['organic-farming', 'Organic Farming'],
-  ['urban-farming', 'Urban Farming'],
-  ['hydroponics', 'Hydroponics'],
-  ['soil-seeds', 'Soil & Seeds'],
-  ['health-food', 'Health & Food'],
-  ['agri-business', 'Agri Business'],
-];
+import PromoSlot from '@/components/PromoSlot';
+import { rich } from '@/lib/rich';
 
-const CATEGORY_LABELS = Object.fromEntries(CATEGORIES);
-
-function BlogContent() {
+function BlogContent({ c, categories, allLabel }) {
+  const CATEGORIES = [['all', allLabel || 'All Topics'], ...categories.map((x) => [x.slug, x.label])];
+  const CATEGORY_LABELS = Object.fromEntries(CATEGORIES);
+  const pinned = (c.pinned_slugs || []).filter(Boolean);
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const [activeCategory, setActiveCategory] = useState(initialCategory);
@@ -45,16 +39,19 @@ function BlogContent() {
     return () => { cancelled = true; };
   }, []);
 
-  const filtered = activeCategory === 'all' ? posts : posts.filter((p) => p.category === activeCategory);
+  const ordered = pinned.length
+    ? [...pinned.map((sl) => posts.find((p) => p.slug === sl)).filter(Boolean), ...posts.filter((p) => !pinned.includes(p.slug))]
+    : posts;
+  const filtered = activeCategory === 'all' ? ordered : ordered.filter((p) => p.category === activeCategory);
 
   return (
     <div id="pg-blog" className="pg on">
       <div className="blog-header">
         <div className="blog-header-inner">
-          <div className="eyebrow">All Articles</div>
-          <h1 className="section-title" style={{ fontSize: 'clamp(2rem,3.5vw,3rem)' }}>The Organik Greens <em>Blog</em></h1>
-          <p style={{ color: 'var(--ink-3)', maxWidth: 500, marginTop: 8, fontSize: '.97rem', lineHeight: 1.7 }}>Practical, honest, India-first knowledge on organic farming, urban growing, hydroponics, and more.</p>
-          <div className="filter-pills">
+          {c.eyebrow ? <div className="eyebrow">{c.eyebrow}</div> : null}
+          <h1 className="section-title" style={{ fontSize: 'clamp(2rem,3.5vw,3rem)' }}>{rich(c.title)}</h1>
+          {c.subtitle ? <p style={{ color: 'var(--ink-3)', maxWidth: 500, marginTop: 8, fontSize: '.97rem', lineHeight: 1.7 }}>{rich(c.subtitle)}</p> : null}
+          {c.show_filters !== false ? <div className="filter-pills">
             {CATEGORIES.map(([slug, label]) => (
               <button
                 key={slug}
@@ -64,15 +61,16 @@ function BlogContent() {
                 {label}
               </button>
             ))}
-          </div>
+          </div> : null}
         </div>
       </div>
+      <PromoSlot slot="blog_top" />
       <section className="section" style={{ background: 'var(--surface)', paddingTop: 40 }}>
         <div className="section-inner">
           {loading && <p style={{ color: 'var(--ink-3)' }}>Loading articles…</p>}
           {error && <p style={{ color: 'var(--amber)' }}>Couldn't load articles: {error}</p>}
           {!loading && !error && filtered.length === 0 && (
-            <p style={{ color: 'var(--ink-3)' }}>No articles published yet in this category — check back soon.</p>
+            <p style={{ color: 'var(--ink-3)' }}>{c.empty_text}</p>
           )}
           <div className="blog-grid">
             {filtered.map((p) => (
@@ -83,7 +81,7 @@ function BlogContent() {
                   <h3>{p.title}</h3>
                   <p>{p.excerpt}</p>
                   <div className="blog-meta">
-                    <span>Organik Greens</span>
+                    <span>{c.author_label}</span>
                     <span className="read-time">{p.read_time}</span>
                   </div>
                 </div>
@@ -92,14 +90,15 @@ function BlogContent() {
           </div>
         </div>
       </section>
+      <PromoSlot slot="blog_bottom" />
     </div>
   );
 }
 
-export default function BlogPage() {
+export default function BlogClient(props) {
   return (
     <Suspense fallback={<div className="section-inner" style={{ padding: '140px 24px' }} />}>
-      <BlogContent />
+      <BlogContent {...props} />
     </Suspense>
   );
 }

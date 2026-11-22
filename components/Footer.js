@@ -1,57 +1,59 @@
-import Link from 'next/link';
+import { isHrefDisabled } from '@/lib/site';
+import { on, rich, SmartLink } from '@/lib/rich';
 
-const TOPICS = [
-  ['organic-farming', 'Organic Farming'],
-  ['urban-farming', 'Urban Farming'],
-  ['hydroponics', 'Hydroponics'],
-  ['soil-seeds', 'Soil & Seeds'],
-  ['health-food', 'Health & Food'],
-  ['agri-business', 'Agri Business'],
-];
+export default function Footer({ s }) {
+  const f = s.footer;
+  const cols = on(f.columns).map((c) => {
+    const links = c.source === 'categories'
+      ? (s.categories.items || []).map((x) => ({ id: x.slug, label: x.label, href: `/blog?category=${x.slug}` }))
+      : (c.links || []);
+    return { ...c, links: links.filter((l) => !isHrefDisabled(l.href, s)) };
+  }).filter((c) => s.pages.blog?.enabled !== false || c.source !== 'categories');
+  const socials = on(f.socials);
+  const logo = s.brand.footer_logo_url || s.brand.logo_url || '/logo.jpg';
+  const year = new Date().getFullYear();
+  const lastIndex = cols.length - 1;
+  const style = {
+    '--fcols': `2.2fr ${cols.map(() => '1fr').join(' ')}`.trim(),
+    ...(f.background ? { background: f.background } : {}),
+    ...(f.text_color ? { color: f.text_color } : {}),
+  };
 
-export default function Footer() {
+  const contact = f.contact?.enabled ? (
+    <>
+      <h5 style={{ marginTop: lastIndex >= 0 ? 20 : 0 }}>{f.contact.title || 'Contact'}</h5>
+      {f.contact.email ? <a href={`mailto:${f.contact.email}`} style={{ fontSize: '.78rem' }}>{f.contact.email}</a> : null}
+      {f.contact.phone ? <a href={`tel:${String(f.contact.phone).replace(/[^+0-9]/g, '')}`} style={{ fontSize: '.78rem' }}>{f.contact.phone}</a> : null}
+    </>
+  ) : null;
+
   return (
-    <footer id="main-footer">
+    <footer id="main-footer" style={style}>
       <div className="footer-inner">
         <div className="footer-top">
           <div className="footer-brand">
-            <img src="/logo.jpg" alt="Organik Greens" />
-            <p>India's trusted guide to organic farming, urban gardening, hydroponics, and sustainable living. Practical knowledge for every grower.</p>
-            <div className="footer-socials">
-              <div className="fsoc" title="Instagram">📸</div>
-              <div className="fsoc" title="YouTube">▶</div>
-              <div className="fsoc" title="Pinterest">P</div>
-              <a href="https://wa.me/919311053111" className="fsoc" title="WhatsApp" target="_blank" rel="noreferrer">💬</a>
+            {f.show_logo ? <img src={logo} alt={s.brand.logo_alt || 'Organik Greens'} style={{ height: Number(s.brand.footer_logo_height) || 36 }} /> : null}
+            {f.description ? <p>{rich(f.description)}</p> : null}
+            {socials.length ? (
+              <div className="footer-socials">
+                {socials.map((x) => x.url
+                  ? <a key={x.id} href={x.url} className="fsoc" title={x.label} target="_blank" rel="noreferrer">{x.icon}</a>
+                  : <div key={x.id} className="fsoc" title={x.label}>{x.icon}</div>)}
+              </div>
+            ) : null}
+          </div>
+          {cols.map((c, i) => (
+            <div className="footer-col" key={c.id}>
+              <h5>{c.title}</h5>
+              {c.links.map((l) => (l.href ? <SmartLink key={l.id || l.label} href={l.href}>{l.label}</SmartLink> : <a key={l.id || l.label}>{l.label}</a>))}
+              {i === lastIndex ? contact : null}
             </div>
-          </div>
-          <div className="footer-col">
-            <h5>Topics</h5>
-            {TOPICS.map(([slug, label]) => (
-              <Link key={slug} href={`/blog?category=${slug}`}>{label}</Link>
-            ))}
-          </div>
-          <div className="footer-col">
-            <h5>Navigation</h5>
-            <Link href="/">Home</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/shop">Shop</Link>
-            <Link href="/about">About Us</Link>
-            <Link href="/contact">Contact</Link>
-          </div>
-          <div className="footer-col">
-            <h5>Legal</h5>
-            <a>Privacy Policy</a>
-            <a>Terms & Conditions</a>
-            <a>Affiliate Disclosure</a>
-            <a>Cookie Policy</a>
-            <h5 style={{ marginTop: 20 }}>Contact</h5>
-            <a href="mailto:deals.rajat@gmail.com" style={{ fontSize: '.78rem' }}>deals.rajat@gmail.com</a>
-            <a href="tel:+919311053111" style={{ fontSize: '.78rem' }}>+91 93110 53111</a>
-          </div>
+          ))}
+          {cols.length === 0 && contact ? <div className="footer-col">{contact}</div> : null}
         </div>
         <div className="footer-bottom">
-          <p>© 2025 Organik Greens. All rights reserved. organikgreens.com</p>
-          <p>Made with 🌱 in India</p>
+          <p>{String(f.copyright || '').replace('{year}', year)}</p>
+          {f.tagline ? <p>{f.tagline}</p> : null}
         </div>
       </div>
     </footer>
